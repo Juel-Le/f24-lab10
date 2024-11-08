@@ -1,19 +1,20 @@
 import React, { useState } from 'react'
 import './Quiz.css'
-import QuizQuestion from '../core/QuizQuestion';
+/* import QuizQuestion from '../core/QuizQuestion'; */
 // Hint: Take advantage of the QuizQuestion interface
+import QuizCore from '../core/QuizCore';
 
-interface QuizState {
+/* interface QuizState {
   questions: QuizQuestion[]
   currentQuestionIndex: number
   selectedAnswer: string | null
   score: number
-}
+} */
 
 const Quiz: React.FC = () => {
   // TODO: Task1 - Seprate the logic of quiz from the UI.
   // Hint: Take advantage of QuizCore to manage quiz state separately from the UI.
-  const initialQuestions: QuizQuestion[] = [
+/*   const initialQuestions: QuizQuestion[] = [
     {
       question: 'What is the capital of France?',
       options: ['London', 'Berlin', 'Paris', 'Madrid'],
@@ -25,10 +26,15 @@ const Quiz: React.FC = () => {
     currentQuestionIndex: 0,  // Initialize the current question index.
     selectedAnswer: null,  // Initialize the selected answer.
     score: 0,  // Initialize the score.
-  });
+  }); */
+  const [quizCore] = useState(new QuizCore());
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isCompleted, setIsCompleted] = useState(false);
+
 
   const handleOptionSelect = (option: string): void => {
-    setState((prevState) => ({ ...prevState, selectedAnswer: option }));
+    /* setState((prevState) => ({ ...prevState, selectedAnswer: option })); */
+    setSelectedAnswer(option);
   }
 
 
@@ -37,26 +43,32 @@ const Quiz: React.FC = () => {
     // Hint: You might want to check for a function in the core logic to help with this.
   } 
 
-  const { questions, currentQuestionIndex, selectedAnswer, score } = state;
-  const currentQuestion = questions[currentQuestionIndex];
+/*   const { questions, currentQuestionIndex, selectedAnswer, score } = state;
+  const currentQuestion = questions[currentQuestionIndex]; */
 
-  if (!currentQuestion) {
+  /* if (!currentQuestion) { */
+  if (isCompleted) {
     return (
       <div>
         <h2>Quiz Completed</h2>
-        <p>Final Score: {score} out of {questions.length}</p>
+        {/* <p>Final Score: {score} out of {questions.length}</p> */}
+        <p>Final Score: {quizCore.getScore()} out of {quizCore.getTotalQuestions()}</p>
       </div>
     );
   }
 
+  const currentQuestion = quizCore.getCurrentQuestion();
+
   return (
     <div>
       <h2>Quiz Question:</h2>
-      <p>{currentQuestion.question}</p>
+      {/* <p>{currentQuestion.question}</p> */}
+      <p>{currentQuestion?.question}</p>
     
       <h3>Answer Options:</h3>
       <ul>
-        {currentQuestion.options.map((option) => (
+        {/* {currentQuestion.options.map((option) => ( */}
+        {currentQuestion?.options.map((option) => (
           <li
             key={option}
             onClick={() => handleOptionSelect(option)}
@@ -70,7 +82,8 @@ const Quiz: React.FC = () => {
       <h3>Selected Answer:</h3>
       <p>{selectedAnswer ?? 'No answer selected'}</p>
 
-      <button onClick={handleButtonClick}>Next Question</button>
+      {/* <button onClick={handleButtonClick}>Next Question</button> */}
+      <button onClick={handleButtonClick}>{quizCore.hasNextQuestion() ? 'Next Question' : 'Submit'}</button>
     </div>
   );
 };
